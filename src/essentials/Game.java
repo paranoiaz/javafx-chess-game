@@ -19,15 +19,18 @@ public class Game {
     public void nextMove() {
         if (this.currentPlayer.equals(this.playerWhite)) {
             this.currentPlayer = this.playerBlack;
+            return;
         }
-        else if (this.currentPlayer.equals(this.playerBlack)) {
+        if (this.currentPlayer.equals(this.playerBlack)) {
             this.currentPlayer = this.playerWhite;
+            return;
         }
     }
     
     public Player checkWinner() {
         boolean blackHasKing = false;
         boolean whiteHasKing = false;
+
         for (Piece piece: this.playerBlack.PIECES) {
             if (piece instanceof King) {
                 blackHasKing = true;
@@ -54,6 +57,7 @@ public class Game {
     public void setupPieces() {
         for (int row = 0; row < Board.boardMatrix.length; row++) {
             for (int column = 0; column < Board.boardMatrix[row].length; column++) {
+                // ternary operator forces you to assign the result of the expression to a variable
                 if (row == 1 || row == 6) {
                     boolean temp = row == 1 ? playerBlack.PIECES.add(new Pawn(column, row, playerBlack.COLOR)) :
                             playerWhite.PIECES.add(new Pawn(column, row, playerWhite.COLOR));
