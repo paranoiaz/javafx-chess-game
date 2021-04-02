@@ -31,16 +31,16 @@ public class Knight extends Piece {
                 Piece piece = (Piece) Board.boardMatrix[y][x];
                 return !this.COLOR.equalsIgnoreCase(piece.COLOR);
             }
-            return true;
+            return Board.boardMatrix[y][x] == null;
         }
-        
+
         // left and right hops
         if ((this.positionX + 2 == x || this.positionX - 2 == x) && (this.positionY - 1 == y || this.positionY + 1 == y)) {
             if (Board.boardMatrix[y][x] != null) {
                 Piece piece = (Piece) Board.boardMatrix[y][x];
                 return !this.COLOR.equalsIgnoreCase(piece.COLOR);
             }
-            return true;
+            return Board.boardMatrix[y][x] == null;
         }
         return false;
     }
