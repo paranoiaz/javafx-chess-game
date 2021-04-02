@@ -33,45 +33,25 @@ public class Pawn extends Piece {
         if (this.positionX == x && this.positionY == y) {
             return false;
         }
-        if (this.COLOR.equalsIgnoreCase("black")) {
-            // up move with 1 step
-            if (this.positionY + 1 == y && this.positionX == x) {
-                if (Board.boardMatrix[y][x] == null) {
-                    return true;
-                }
-            }
-            // capture pawn by 1 step up and 1 step to the left or right
-            if (this.positionY + 1 == y && (this.positionX - 1 == x || this.positionX + 1 == x)) {
-                if (Board.boardMatrix[y][x] != null) {
-                    Piece piece = (Piece) Board.boardMatrix[y][x];
-                    return piece.COLOR.equalsIgnoreCase("white");
-                }
-            }
-            // up move with 2 steps
-            if (firstMove) {
-                if (this.positionY + 2 == y && this.positionX == x) {
-                    if (Board.boardMatrix[y][x] == null && Board.boardMatrix[y - 1][x] == null) {
-                        return true;
-                    }
-                }
+
+        int plusOrMinus = this.COLOR.equalsIgnoreCase("black") ? 1 : -1;
+        // move forward with 1 step
+        if (this.positionY + plusOrMinus == y && this.positionX == x) {
+            if (Board.boardMatrix[y][x] == null) {
+                return true;
             }
         }
-        if (this.COLOR.equalsIgnoreCase("white")) {
-            if (this.positionY - 1 == y && this.positionX == x) {
-                if (Board.boardMatrix[y][x] == null) {
-                    return true;
-                }
+        // capture pawn by 1 step forward and 1 step to the left or right
+        if (this.positionY + plusOrMinus == y && (this.positionX - 1 == x || this.positionX + 1 == x)) {
+            if (Board.boardMatrix[y][x] != null) {
+                Piece piece = (Piece) Board.boardMatrix[y][x];
+                return !this.COLOR.equalsIgnoreCase(piece.COLOR);
             }
-            if (this.positionY - 1 == y && (this.positionX - 1 == x || this.positionX + 1 == x)) {
-                if (Board.boardMatrix[y][x] != null) {
-                    Piece piece = (Piece) Board.boardMatrix[y][x];
-                    return piece.COLOR.equalsIgnoreCase("black");
-                }
-            }
-            if (firstMove) {
-                if (this.positionY - 2 == y && this.positionX == x) {
-                    return Board.boardMatrix[y][x] == null && Board.boardMatrix[y + 1][x] == null;
-                }
+        }
+        // move forward with 2 steps
+        if (firstMove) {
+            if (this.positionY + (plusOrMinus * 2) == y && this.positionX == x) {
+                return Board.boardMatrix[y][x] == null && Board.boardMatrix[y - plusOrMinus][x] == null;
             }
         }
         return false;
