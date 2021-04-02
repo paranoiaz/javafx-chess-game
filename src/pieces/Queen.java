@@ -56,20 +56,18 @@ public class Queen extends Piece {
             return true;
         }
 
+        int row;
+        int column;
         int plusOrMinusX = this.positionX < x ? 1 : -1;
         int plusOrMinusY = this.positionY < y ? 1 : -1;
-        int tempRow = this.positionY;
-        int tempColumn = this.positionX;
 
-        for (int row = this.positionY + plusOrMinusY, column = this.positionX + plusOrMinusX; row != y && column != x; row += plusOrMinusY, column += plusOrMinusX) {
-            tempRow = row;
-            tempColumn = column;
+        for (row = this.positionY + plusOrMinusY, column = this.positionX + plusOrMinusX; row != y && column != x; row += plusOrMinusY, column += plusOrMinusX) {
             if (Board.boardMatrix[row][column] != null) {
                 return false;
             }
         }
 
-        if (tempRow + plusOrMinusY == y && tempColumn + plusOrMinusX == x) {
+        if (row == y && column == x) {
             if (Board.boardMatrix[y][x] != null) {
                 Piece piece = (Piece) Board.boardMatrix[y][x];
                 return !this.COLOR.equalsIgnoreCase(piece.COLOR);
