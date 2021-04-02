@@ -37,6 +37,7 @@ public class Rook extends Piece {
                 Piece piece = (Piece) Board.boardMatrix[y][x];
                 return !this.COLOR.equalsIgnoreCase(piece.COLOR);
             }
+            return Board.boardMatrix[y][x] == null;
         }
 
         // checking vertically
@@ -51,7 +52,8 @@ public class Rook extends Piece {
                 Piece piece = (Piece) Board.boardMatrix[y][x];
                 return !this.COLOR.equalsIgnoreCase(piece.COLOR);
             }
+            return Board.boardMatrix[y][x] == null;
         }
-        return this.positionY == y || this.positionX == x;
+        return false;
     }
 }
