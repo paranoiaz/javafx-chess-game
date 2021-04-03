@@ -39,6 +39,7 @@ public class GUI extends Application {
         this.rootPane = new GridPane();
         this.mainScene = new Scene(this.rootPane, GUI.HEIGHT, GUI.WIDTH);
 
+        // start screen
         VBox homeScreen = new VBox();
         Label gameTitle = new Label("Chess Game");
         Button startButton = new Button("Play");
@@ -70,7 +71,7 @@ public class GUI extends Application {
         this.window.show();
     }
 
-    public void playGame() {
+    private void playGame() {
         // setting up the game
         this.chessGame = new Game();
         this.chessGame.setupPieces();
@@ -87,6 +88,7 @@ public class GUI extends Application {
         this.rootPane.setOnMousePressed(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent mouseEvent) {
+                // get node from mouse position
                 Node selectedNode = mouseEvent.getPickResult().getIntersectedNode();
                 Integer column = GridPane.getColumnIndex(selectedNode);
                 Integer row = GridPane.getRowIndex(selectedNode);
@@ -95,10 +97,12 @@ public class GUI extends Application {
                     Node shapeNode = getNodeFromPane(row, column);
                     if (shapeNode instanceof Rectangle) {
                         if (lastNode != null) {
+                            // access rectangle object using node index
                             Rectangle lastRectangle = (Rectangle) lastNode;
                             Integer lastNodeRow = GridPane.getRowIndex(lastNode);
                             Integer lastNodeColumn = GridPane.getColumnIndex(lastNode);
 
+                            // change tile color to original when not selected
                             if ((lastNodeRow + lastNodeColumn) % 2 == 0) {
                                 lastRectangle.setFill(Color.LIGHTGREY);
                             } else {
@@ -106,8 +110,10 @@ public class GUI extends Application {
                             }
                         }
 
+
                         Piece selectedPiece = getPieceFromPlayer(row, column);
                         Piece lastPiece = null;
+                        // get piece object from previous selected node if not null
                         if (lastNode != null) {
                             lastPiece = getPieceFromPlayer(GridPane.getRowIndex(lastNode), GridPane.getColumnIndex(lastNode));
                         }
@@ -115,20 +121,23 @@ public class GUI extends Application {
                         if (lastPiece != null && chessGame.currentPlayer.COLOR.equalsIgnoreCase(lastPiece.COLOR)) {
                             if (lastPiece.checkMove(column, row)) {
                                 if (selectedPiece != null) {
+                                    // capture pawn if piece on selected node location
                                     if (!lastPiece.COLOR.equalsIgnoreCase(selectedPiece.COLOR)) {
                                         boolean temp = selectedPiece.COLOR.equalsIgnoreCase("black") ?
                                                 chessGame.playerBlack.PIECES.remove(selectedPiece) :
                                                 chessGame.playerWhite.PIECES.remove(selectedPiece);
                                     }
                                 }
+                                // move piece to new location and render board
                                 lastPiece.movePiece(column, row);
                                 rootPane.getChildren().clear();
                                 renderTiles();
                                 renderPieces(chessGame.playerWhite.PIECES);
                                 renderPieces(chessGame.playerBlack.PIECES);
+
                                 Player winner = chessGame.checkWinner();
-                                chessGame.nextMove();
                                 if (winner != null) {
+                                    // winner end screen
                                     VBox endScreen = new VBox();
                                     Label endTitle = new Label(String.format("Player %s has won!", winner.COLOR));
 
@@ -142,9 +151,11 @@ public class GUI extends Application {
                                     endScreen.setAlignment(Pos.CENTER);
                                     window.setScene(new Scene(endScreen, GUI.HEIGHT, GUI.WIDTH));
                                 }
+                                chessGame.nextMove();
                             }
                         }
 
+                        // piece highlighting for current player
                         if (selectedPiece != null) {
                             if (chessGame.currentPlayer.COLOR.equalsIgnoreCase(selectedPiece.COLOR)) {
                                 ((Rectangle) shapeNode).setFill(Color.ORANGE);
@@ -157,13 +168,10 @@ public class GUI extends Application {
         });
     }
 
-    public void renderTiles() {
+    private void renderTiles() {
         for (int row = 0; row < Board.boardMatrix.length; row++) {
             for (int column = 0; column < Board.boardMatrix[row].length; column++) {
-                String color = "black";
-                if ((row + column) % 2 == 0) {
-                    color = "white";
-                }
+                String color = (row + column) % 2 == 0 ? "white" : "black";
                 Tile tile = new Tile(color);
                 tile.createTile(GUI.HEIGHT / Board.DIMENSION, GUI.WIDTH / Board.DIMENSION);
                 this.rootPane.add(tile.TILE, row, column);
@@ -171,7 +179,7 @@ public class GUI extends Application {
         }
     }
 
-    public void renderPieces(ArrayList<Piece> pieces) {
+    private void renderPieces(ArrayList<Piece> pieces) {
         for (Piece piece: pieces) {
             ImageView pieceImage = new ImageView(piece.sprite);
             pieceImage.setFitHeight(GUI.HEIGHT / Board.DIMENSION);
@@ -191,22 +199,7 @@ public class GUI extends Application {
 
     private Piece getPieceFromPlayer(int row, int column) {
         if (Board.boardMatrix[row][column] != null) {
-            Piece selectedPiece = null;
-            for (Piece piece: this.chessGame.playerBlack.PIECES) {
-                if (piece.positionX == column && piece.positionY == row) {
-                    selectedPiece = piece;
-                    break;
-                }
-            }
-            if (selectedPiece == null) {
-                for (Piece piece: chessGame.playerWhite.PIECES) {
-                    if (piece.positionX == column && piece.positionY == row) {
-                        selectedPiece = piece;
-                        break;
-                    }
-                }
-            }
-            return selectedPiece;
+            return (Piece) Board.boardMatrix[row][column];
         }
         return null;
     }
