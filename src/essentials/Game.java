@@ -1,6 +1,7 @@
 package essentials;
 
 import pieces.*;
+import java.util.List;
 
 
 public class Game {
@@ -17,38 +18,23 @@ public class Game {
     }
 
     public void nextMove() {
-        if (this.currentPlayer.equals(this.playerWhite)) {
-            this.currentPlayer = this.playerBlack;
-            return;
+        this.currentPlayer = this.currentPlayer.equals(this.playerWhite) ? this.playerBlack : this.playerWhite;
+    }
+
+    private Boolean checkKing(List<Piece> pieces) {
+        for (Piece piece: pieces) {
+            if (piece instanceof King) {
+                return true;
+            }
         }
-        if (this.currentPlayer.equals(this.playerBlack)) {
-            this.currentPlayer = this.playerWhite;
-            return;
-        }
+        return false;
     }
     
     public Player checkWinner() {
-        boolean blackHasKing = false;
-        boolean whiteHasKing = false;
-
-        for (Piece piece: this.playerBlack.PIECES) {
-            if (piece instanceof King) {
-                blackHasKing = true;
-                break;
-            }
-        }
-
-        for (Piece piece: this.playerWhite.PIECES) {
-            if (piece instanceof King) {
-                whiteHasKing = true;
-                break;
-            }
-        }
-
-        if (!blackHasKing) {
+        if (!this.checkKing(this.playerBlack.PIECES)) {
             return this.playerWhite;
         }
-        if (!whiteHasKing) {
+        if (!this.checkKing(this.playerWhite.PIECES)) {
             return this.playerBlack;
         }
         return null;
