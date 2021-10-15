@@ -34,7 +34,7 @@ public class GUI extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         this.window = primaryStage;
-        this.window.setTitle("Chess Game developed by github.com/paranoiaz");
+        this.window.setTitle("JavaFX Chess Game");
         this.window.setResizable(false);
         this.rootPane = new GridPane();
         this.mainScene = new Scene(this.rootPane, GUI.HEIGHT, GUI.WIDTH);
@@ -79,10 +79,8 @@ public class GUI extends Application {
         this.chessGame.chessBoard.addPiecesToBoard(this.chessGame.playerWhite.PIECES);
         this.chessGame.chessBoard.addPiecesToBoard(this.chessGame.playerBlack.PIECES);
 
-        // rendering the game
-        this.renderTiles();
-        this.renderPieces(this.chessGame.playerWhite.PIECES);
-        this.renderPieces(this.chessGame.playerBlack.PIECES);
+        // rendering the board
+        this.renderGame();
 
         // making gui interactive
         this.rootPane.setOnMousePressed(new EventHandler<MouseEvent>() {
@@ -128,12 +126,11 @@ public class GUI extends Application {
                                                 chessGame.playerWhite.PIECES.remove(selectedPiece);
                                     }
                                 }
+
                                 // move piece to new location and render board
                                 lastPiece.movePiece(column, row);
                                 rootPane.getChildren().clear();
-                                renderTiles();
-                                renderPieces(chessGame.playerWhite.PIECES);
-                                renderPieces(chessGame.playerBlack.PIECES);
+                                renderGame();
 
                                 Player winner = chessGame.checkWinner();
                                 if (winner != null) {
@@ -166,6 +163,12 @@ public class GUI extends Application {
                 }
             }
         });
+    }
+
+    private void renderGame() {
+        this.renderTiles();
+        this.renderPieces(this.chessGame.playerWhite.PIECES);
+        this.renderPieces(this.chessGame.playerBlack.PIECES);
     }
 
     private void renderTiles() {
