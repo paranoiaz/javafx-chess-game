@@ -34,7 +34,7 @@ public class GUI extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         this.window = primaryStage;
-        this.window.setTitle("JavaFX Chess Game");
+        this.window.setTitle("Chess Game");
         this.window.setResizable(false);
         this.rootPane = new GridPane();
         this.mainScene = new Scene(this.rootPane, GUI.HEIGHT, GUI.WIDTH);
